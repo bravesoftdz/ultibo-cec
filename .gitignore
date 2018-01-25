@@ -1,0 +1,8 @@
+*.bin
+*.elf
+*.img
+*.log
+*.lps
+*.o
+*.ppu
+lib/
