@@ -341,7 +341,7 @@ type
   PVC_CEC_TOPOLOGY_T = ^VC_CEC_TOPOLOGY_T;
 
 // API calls
-procedure vc_vchi_cec_init (instance : PVCHI_INSTANCE_T; connections : PPVCHI_CONNECTION_T; num_connections : Longword); cdecl; external libvchostif name vc_vchi_cec_init';
+procedure vc_vchi_cec_init (instance : PVCHI_INSTANCE_T; connections : PPVCHI_CONNECTION_T; num_connections : Longword); cdecl; external libvchostif name 'vc_vchi_cec_init';
 procedure vc_vchi_cec_stop; cdecl; external libvchostif name 'vc_vchi_cec_stop';
 procedure vc_cec_register_callback (callback : TCECServiceCallback; Data : pointer); cdecl; external libvchostif name 'vc_cec_register_callback';
 function vc_cec_register_command (opcode : byte) : integer; cdecl; external libvchostif name 'vc_cec_register_command';
