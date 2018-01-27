@@ -10,6 +10,18 @@ uses
   Classes, SysUtils, VC4;
 const
 
+// VC_CEC_NOTIFY_T  // aka Reason Codes from Callback
+  VC_CEC_NOTIFY_NONE                             = 0;        // Reserved - NOT TO BE USED
+  VC_CEC_TX                                      = 1 shl 0;  // A message has been transmitted
+  VC_CEC_RX                                      = 1 shl 1;  // A message has arrived (only for registered commands)
+  VC_CEC_BUTTON_PRESSED                          = 1 shl 2;  // User Control Pressed
+  VC_CEC_BUTTON_RELEASE                          = 1 shl 3;  // User Control Release
+  VC_CEC_REMOTE_PRESSED                          = 1 shl 4;  // Vendor Remote Button Down
+  VC_CEC_REMOTE_RELEASE                          = 1 shl 5;  // Vendor Remote Button Up
+  VC_CEC_LOGICAL_ADDR                            = 1 shl 6;  // New logical address allocated or released
+  VC_CEC_TOPOLOGY                                = 1 shl 7;  // Topology is available
+  VC_CEC_LOGICAL_ADDR_LOST                       = 1 shl 15; // Only for passive mode, if the logical address is lost for whatever reason, this will be triggered */
+
 // Broadcast address and TV logical address
   CEC_BROADCAST_ADDR                             = $0F;
   CEC_TV_ADDRESS                                 = $00;
@@ -283,18 +295,6 @@ const
   CEC_AllDevices_eFreeUse                        = 14; // Free Address, use for any device
   CEC_AllDevices_eUnRegistered                   = 15; // UnRegistered Devices
 
-// VC_CEC_NOTIFY_T  // aka Reason Codes from Callback
-  VC_CEC_NOTIFY_NONE                             = 0;        // Reserved - NOT TO BE USED
-  VC_CEC_TX                                      = 1 shl 0;  // A message has been transmitted
-  VC_CEC_RX                                      = 1 shl 1;  // A message has arrived (only for registered commands)
-  VC_CEC_BUTTON_PRESSED                          = 1 shl 2;  // User Control Pressed
-  VC_CEC_BUTTON_RELEASE                          = 1 shl 3;  // User Control Release
-  VC_CEC_REMOTE_PRESSED                          = 1 shl 4;  // Vendor Remote Button Down
-  VC_CEC_REMOTE_RELEASE                          = 1 shl 5;  // Vendor Remote Button Up
-  VC_CEC_LOGICAL_ADDR                            = 1 shl 6;  // New logical address allocated or released
-  VC_CEC_TOPOLOGY                                = 1 shl 7;  // Topology is available
-  VC_CEC_LOGICAL_ADDR_LOST                       = 1 shl 15; // Only for passive mode, if the logical address is lost for whatever reason, this will be triggered */
-
 // VC_CEC_ERROR_T CEC service return code
   VC_CEC_SUCCESS                                 = 0; // OK
   VC_CEC_ERROR_NO_ACK                            = 1; // No acknowledgement
@@ -394,7 +394,7 @@ function DevTypeToString (dev : byte) : string;
 function CECErrToString (err : integer) : string;
 function ReasonToString (r : Word) : string;
 function OpcodeToString (op : byte) : string;
-
+function UserControlToString (button : byte) : string;
 
 
 implementation
@@ -555,6 +555,84 @@ begin
     CEC_Opcode_CDC                         : Result := 'CDC';
     CEC_Opcode_Abort        	             : Result := 'Abort';
     else                                     Result := 'Unknown (' + op.ToHexString (2) + ')';
+    end;
+end;
+
+function UserControlToString (button : byte) : string;
+begin
+  case button of
+    CEC_User_Control_Select                        : Result := 'Select';
+    CEC_User_Control_Up                            : Result := 'Up';
+    CEC_User_Control_Down                          : Result := 'Down';
+    CEC_User_Control_Left                          : Result := 'Left';
+    CEC_User_Control_Right                         : Result := 'Right';
+    CEC_User_Control_RightUp                       : Result := 'RightUp';
+    CEC_User_Control_RightDown                     : Result := 'RightDown';
+    CEC_User_Control_LeftUp                        : Result := 'LeftUp';
+    CEC_User_Control_LeftDown                      : Result := 'leftDown';
+    CEC_User_Control_RootMenu                      : Result := 'RootMenu';
+    CEC_User_Control_SetupMenu                     : Result := 'SetupMenu';
+    CEC_User_Control_ContentsMenu                  : Result := 'ContentsMenu';
+    CEC_User_Control_FavoriteMenu                  : Result := 'FavoriteMenu';
+    CEC_User_Control_Exit                          : Result := 'Exit';
+    CEC_User_Control_Number0                       : Result := 'Number0';
+    CEC_User_Control_Number1                       : Result := 'Number1';
+    CEC_User_Control_Number2                       : Result := 'Number2';
+    CEC_User_Control_Number3                       : Result := 'Number3';
+    CEC_User_Control_Number4                       : Result := 'Number4';
+    CEC_User_Control_Number5                       : Result := 'Number5';
+    CEC_User_Control_Number6                       : Result := 'Number6';
+    CEC_User_Control_Number7                       : Result := 'Number7';
+    CEC_User_Control_Number8                       : Result := 'Number8';
+    CEC_User_Control_Number9                       : Result := 'Number9';
+    CEC_User_Control_Dot                           : Result := 'Dot';
+    CEC_User_Control_Enter                         : Result := 'Enter';
+    CEC_User_Control_Clear                         : Result := 'Clear';
+    CEC_User_Control_ChannelUp                     : Result := 'ChannelUp';
+    CEC_User_Control_ChannelDown                   : Result := 'ChannelDown';
+    CEC_User_Control_PreviousChannel               : Result := 'PreviousChannel';
+    CEC_User_Control_SoundSelect                   : Result := 'SoundSelect';
+    CEC_User_Control_InputSelect                   : Result := 'InputSelect';
+    CEC_User_Control_DisplayInformation            : Result := 'DisplayInformation';
+    CEC_User_Control_Help                          : Result := 'Help';
+    CEC_User_Control_PageUp                        : Result := 'PageUp';
+    CEC_User_Control_PageDown                      : Result := 'PageDown';
+    CEC_User_Control_Power                         : Result := 'Power';
+    CEC_User_Control_VolumeUp                      : Result := 'VolumeUp';
+    CEC_User_Control_VolumeDown                    : Result := 'VolumeDown';
+    CEC_User_Control_Mute                          : Result := 'Mute';
+    CEC_User_Control_Play                          : Result := 'Play';
+    CEC_User_Control_Stop                          : Result := 'Stop';
+    CEC_User_Control_Pause                         : Result := 'Pause';
+    CEC_User_Control_Record                        : Result := 'Record';
+    CEC_User_Control_Rewind                        : Result := 'Rewind';
+    CEC_User_Control_FastForward                   : Result := 'FastForward';
+    CEC_User_Control_Eject                         : Result := 'Eject';
+    CEC_User_Control_Forward                       : Result := 'Forward';
+    CEC_User_Control_Backward                      : Result := 'Backward';
+    CEC_User_Control_Angle                         : Result := 'Angle';
+    CEC_User_Control_Subpicture                    : Result := 'Subpicture';
+    CEC_User_Control_VideoOnDemand                 : Result := 'VideoOnDemand';
+    CEC_User_Control_EPG                           : Result := 'EPG';
+    CEC_User_Control_TimerProgramming              : Result := 'TimerProgramming';
+    CEC_User_Control_InitialConfig                 : Result := 'InitialConfig';
+    CEC_User_Control_PlayFunction                  : Result := 'PlayFunction';
+    CEC_User_Control_PausePlayFunction             : Result := 'PausePlayFunction';
+    CEC_User_Control_RecordFunction                : Result := 'RecordFunction';
+    CEC_User_Control_PauseRecordFunction           : Result := 'PauseRecordFunction';
+    CEC_User_Control_StopFunction                  : Result := 'StopFunction';
+    CEC_User_Control_MuteFunction                  : Result := 'MuteFunction';
+    CEC_User_Control_RestoreVolumeFunction         : Result := 'RestoreVolumeFunction';
+    CEC_User_Control_TuneFunction                  : Result := 'TuneFunction';
+    CEC_User_Control_SelectDiskFunction            : Result := 'SelectDiskFunction';
+    CEC_User_Control_SelectAVInputFunction         : Result := 'SelectAVInputFunction';
+    CEC_User_Control_SelectAudioInputFunction      : Result := 'SelectAudioInputFunction';
+    CEC_User_Control_F1Blue                        : Result := 'F1Blue';
+    CEC_User_Control_F2Red                         : Result := 'F2Red';
+    CEC_User_Control_F3Green                       : Result := 'F3Green';
+    CEC_User_Control_F4Yellow                      : Result := 'F4Yellow';
+    CEC_User_Control_F5                            : Result := 'F5';
+    else                                             Result := 'Unknown button (' + button.ToHexString (2) + ')';
     end;
 end;
 
